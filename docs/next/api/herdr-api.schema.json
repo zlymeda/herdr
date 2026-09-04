@@ -2162,7 +2162,8 @@
             "cursor",
             "mastracode",
             "antigravity_cli",
-            "grok"
+            "grok",
+            "junie"
           ],
           "type": "string"
         },
@@ -7680,7 +7681,8 @@
             "cursor",
             "mastracode",
             "antigravity_cli",
-            "grok"
+            "grok",
+            "junie"
           ],
           "type": "string"
         },

@@ -406,6 +406,21 @@ fn muse_manifest_requires_complete_live_controls() {
 }
 
 #[test]
+fn junie_manifest_detects_working_blocked_and_idle_states() {
+    let working = explain(Agent::Junie, "Junie is Thinking about your request...");
+    assert_eq!(working.state, AgentState::Working);
+    assert!(working.visible_working);
+
+    let blocked = explain(Agent::Junie, "Allow this command?\nAllow\nDeny");
+    assert_eq!(blocked.state, AgentState::Blocked);
+    assert!(blocked.visible_blocker);
+
+    let idle = explain(Agent::Junie, "Ask Junie what you would like to do?");
+    assert_eq!(idle.state, AgentState::Idle);
+    assert!(idle.visible_idle);
+}
+
+#[test]
 fn manifest_validation_rejects_unknown_fields_empty_rules_invalid_regions_and_regexes() {
     assert!(parse_manifest(
         r#"

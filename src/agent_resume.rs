@@ -207,6 +207,14 @@ pub fn plan(source: &str, agent: &str, session_ref: &AgentSessionRef) -> Option<
         ("herdr:grok", "grok", AgentSessionRefKind::Id) => {
             vec!["grok".into(), "--resume".into(), session_ref.value.clone()]
         }
+        ("herdr:junie", "junie", AgentSessionRefKind::Id) => {
+            vec![
+                "junie".into(),
+                "--resume".into(),
+                "--session-id".into(),
+                session_ref.value.clone(),
+            ]
+        }
         _ => return None,
     };
 
@@ -244,6 +252,7 @@ pub(crate) fn is_official_agent_source(source: &str, agent: &str) -> bool {
             | ("herdr:cursor", "cursor")
             | ("herdr:antigravity_cli", "agy")
             | ("herdr:grok", "grok")
+            | ("herdr:junie", "junie")
     )
 }
 
@@ -464,6 +473,16 @@ mod tests {
             .argv,
             vec!["grok", "--resume", "grok-session"]
         );
+        assert_eq!(
+            plan(
+                "herdr:junie",
+                "junie",
+                &AgentSessionRef::id("junie-session").unwrap()
+            )
+            .unwrap()
+            .argv,
+            vec!["junie", "--resume", "--session-id", "junie-session"]
+        );
     }
 
     #[test]
@@ -595,6 +614,11 @@ mod tests {
             session_ref_from_report("herdr:qwen", "qwen", Some("qwen-id".into()), None).unwrap();
         assert_eq!(session_ref.kind, AgentSessionRefKind::Id);
         assert_eq!(session_ref.value, "qwen-id");
+
+        let session_ref =
+            session_ref_from_report("herdr:junie", "junie", Some("junie-id".into()), None).unwrap();
+        assert_eq!(session_ref.kind, AgentSessionRefKind::Id);
+        assert_eq!(session_ref.value, "junie-id");
 
         let session_ref =
             session_ref_from_report("herdr:antigravity_cli", "agy", Some("agy-id".into()), None)
